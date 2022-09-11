@@ -5454,11 +5454,11 @@ var render = function render() {
     staticStyle: {
       "margin-top": "20px"
     }
-  }, [_c("div", [_c("transition", {
-    attrs: {
-      name: "fade"
-    }
-  }, [_c("router-view")], 1)], 1)]);
+  }, [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-12"
+  }, [_c("router-view")], 1)])]);
 };
 
 var staticRenderFns = [];
@@ -5483,7 +5483,11 @@ var render = function render() {
   var _vm = this,
       _c = _vm._self._c;
 
-  return _c("div", [_c("h3", {
+  return _c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-12"
+  }, [_c("h3", {
     staticClass: "text-center"
   }, [_vm._v("Create Product")]), _vm._v(" "), _c("div", {
     staticClass: "row"
@@ -5547,7 +5551,7 @@ var render = function render() {
     attrs: {
       type: "submit"
     }
-  }, [_vm._v("Create")])])])])]);
+  }, [_vm._v("Create")])])])])])]);
 };
 
 var staticRenderFns = [];
@@ -5572,7 +5576,11 @@ var render = function render() {
   var _vm = this,
       _c = _vm._self._c;
 
-  return _c("div", [_c("h3", {
+  return _c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-12"
+  }, [_c("h3", {
     staticClass: "text-center"
   }, [_vm._v("Edit Product")]), _vm._v(" "), _c("div", {
     staticClass: "row"
@@ -5636,7 +5644,7 @@ var render = function render() {
     attrs: {
       type: "submit"
     }
-  }, [_vm._v("Update")])])])])]);
+  }, [_vm._v("Update")])])])])])]);
 };
 
 var staticRenderFns = [];
@@ -5661,7 +5669,11 @@ var render = function render() {
   var _vm = this,
       _c = _vm._self._c;
 
-  return _c("div", [_c("div", {
+  return _c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-12"
+  }, [_c("div", {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "col-md-10"
@@ -5704,7 +5716,7 @@ var render = function render() {
         }
       }
     }, [_vm._v("Delete")])], 1)])]);
-  }), 0)])]);
+  }), 0)])])]);
 };
 
 var staticRenderFns = [function () {

@@ -15,16 +15,16 @@ import VueAxios from "vue-axios";
 import axios from "axios";
 Vue.use(VueAxios, axios);
 
-import App from "./App.vue";
-import Example from "./components/ExampleComponent.vue";
+import App from "./app.vue";
 
-const routes = [
-    {
-        name: "Example",
-        path: "/",
-        component: Example,
-    },
-];
+import { routes } from "./routes";
 
 const router = new VueRouter({ mode: "history", routes: routes });
-new Vue(Vue.util.extend({ router }, App)).$mount("#app");
+
+const app = new Vue({
+    el: "#app",
+    router: router,
+    render: (h) => h(App),
+});
+
+// new Vue(Vue.util.extend({ router }, App)).$mount("#app");

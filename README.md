@@ -1,64 +1,220 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+install Laravel
+```
+composer create-project laravel/laravel laravel-vue-crud --prefer-dist
+```
+Database Connection
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=db
+DB_USERNAME=root
+DB_PASSWORD=
+```
+Set Up Model and Run Migration
+```
+php artisan make:model Product -m
+```
+```php
+<?php
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+class CreateProductsTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('products', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->text('detail');            
+            $table->timestamps();
+        });
+    }
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('products');
+    }
+}
+```
+Products Model
+```php
+<?php
+namespace App\Models;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+class Product extends Model
+{
+    use HasFactory;
+    protected $fillable = [
+        'name', 
+        'detail'
+    ];    
+}
+```
+```
+php artisan migrate
+```
+Create Product Controller
+```
+php artisan make:controller ProductController
+```
+```php
+<?php
+namespace App\Http\Controllers;
+use Illuminate\Http\Request;
+use App\Models\Product;
+class ProductController extends Controller
+{
+    public function index()
+    {
+        $products = Product::all()->toArray();
+        return array_reverse($products);      
+    }
+    public function store(Request $request)
+    {
+        $product = new Product([
+            'name' => $request->input('name'),
+            'detail' => $request->input('detail')
+        ]);
+        $product->save();
+        return response()->json('Product created!');
+    }
+    public function show($id)
+    {
+        $product = Product::find($id);
+        return response()->json($product);
+    }
+    public function update($id, Request $request)
+    {
+        $product = Product::find($id);
+        $product->update($request->all());
+        return response()->json('Product updated!');
+    }
+    public function destroy($id)
+    {
+        $product = Product::find($id);
+        $product->delete();
+        return response()->json('Product deleted!');
+    }
+}
+```
+**routes/api.php**
+```php
+<?php
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProductController;
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+*/
+Route::middleware('api')->group(function () {
+    Route::resource('products', ProductController::class);
+});
+```
+Install Laravel Vue UI
+```
+composer require laravel/ui
+php artisan ui vue
+```
+After that
+```
+npm install vue-router@3
+npm install vue-axios
+npm install
+npm install run development
+npm run watch
+```
+Initiate Vue in Laravel
+*resources/views/welcome.blade.php*
+```html
+<!doctype html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" value="{{ csrf_token() }}" />
+    <title>Vue JS CRUD Operations in Laravel</title>
+    <link href="{{ mix('css/app.css') }}" type="text/css" rel="stylesheet" />
+</head>
+<body>
+    <div id="app"></div>
+    <script src="{{ mix('js/app.js') }}" type="text/javascript"></script>
+</body>
+</html>
+```
+Edit **resources/js/app.js**
+```js
+/**
+ * First we will load all of this project's JavaScript dependencies which
+ * includes Vue and other libraries. It is a great starting point when
+ * building robust, powerful web applications using Vue and Laravel.
+ */
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+require("./bootstrap");
 
-## About Laravel
+import Vue from "vue";
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+import VueRouter from "vue-router";
+Vue.use(VueRouter);
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+import VueAxios from "vue-axios";
+import axios from "axios";
+Vue.use(VueAxios, axios);
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+import App from "./App.vue";
+import Example from "./components/ExampleComponent.vue";
 
-## Learning Laravel
+const routes = [
+    {
+        name: "Example",
+        path: "/",
+        component: Example,
+    },
+];
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+const router = new VueRouter({ mode: "history", routes: routes });
+new Vue(Vue.util.extend({ router }, App)).$mount("#app");
+```
+Add **resource/js/App.vue**
+```js
+<template>
+    <div class="container">
+        <div>
+            <transition name="fade">
+                <router-view></router-view>
+            </transition>
+        </div>
+    </div>
+</template>
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+<style>
+    .fade-enter-active, .fade-leave-active {
+      transition: opacity .5s
+    }
+    .fade-enter, .fade-leave-active {
+      opacity: 0
+    }
+</style>
 
-## Laravel Sponsors
+<script>
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+    export default{
+    }
+</script>
+```
+```
+php artisan serve
+```
